@@ -4,11 +4,12 @@
 from ranger.gui.color import *
 from ranger.colorschemes.default import Default
 
+
 class Scheme(Default):
     def use(self, context):
         fg, bg, attr = Default.use(self, context)
 
-        if getattr(context, 'pin', False):
+        if getattr(context, "pin", False):
             fg = 208
 
         return fg, bg, attr

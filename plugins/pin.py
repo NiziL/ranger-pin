@@ -16,22 +16,20 @@ import ranger.gui.widgets.browsercolumn
 from ranger.container.directory import Directory
 from ranger.api.commands import Command
 
+PIN_FILE = os.path.expanduser("~/.config/ranger/pinned")
+
+
 # Load list of pinned files from database
-TARGET_PATH = os.path.expanduser("~/.config/ranger/pinned")
-
-
 def set_pinned_paths():
-    if not os.path.exists(TARGET_PATH):
-        open(TARGET_PATH, "w").close()
-    ranger.pinned_paths = [
-        line.rstrip("\n") for line in open(TARGET_PATH).readlines()
-    ]
+    if not os.path.exists(PIN_FILE):
+        open(PIN_FILE, "w").close()
+    ranger.pinned_paths = [line.rstrip("\n") for line in open(PIN_FILE).readlines()]
 
 
 set_pinned_paths()
 
-# Create a sorting method so that pinned files are displayed on top
 
+# Create a sorting method so that pinned files are displayed on top
 def sort_by_pins(path):
     try:
         key = path.basename_natural_lower
@@ -40,6 +38,7 @@ def sort_by_pins(path):
         return key
     except:
         return ("", 0)
+
 
 # Register the sorting method
 Directory.sort_dict["pin"] = sort_by_pins
@@ -52,7 +51,7 @@ ranger.gui.context.Context.pin = False
 # Add commands to pin files
 class Pin(Command):
     def execute(self):
-        f = open(TARGET_PATH, "r")
+        f = open(PIN_FILE, "r")
         files = f.read().rstrip("\n").split("\n")
         f.close()
 
@@ -61,7 +60,7 @@ class Pin(Command):
         for file in self.fm.thistab.get_selection():
             if file.path not in files:
                 if not f:
-                    f = open(TARGET_PATH, "a")
+                    f = open(PIN_FILE, "a")
                 f.write(file.path)
                 f.write("\n")
 
