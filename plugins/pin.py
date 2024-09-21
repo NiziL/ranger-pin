@@ -73,7 +73,7 @@ class Pin(Command):
 # Add commands to unpin files
 class Unpin(Command):
     def execute(self):
-        f = open(TARGET_PATH, "r")
+        f = open(PIN_FILE, "r")
         files = f.read().rstrip("\n").split("\n")
         f.close()
 
@@ -83,7 +83,7 @@ class Unpin(Command):
                 new_files.remove(file.path)
 
         if len(new_files) != len(files):
-            f = open(TARGET_PATH, "w")
+            f = open(PIN_FILE, "w")
             f.write("\n".join(new_files) + "\n")
             f.close()
 
